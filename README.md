@@ -28,6 +28,13 @@ Deep-link to any paragraph by adding `#pN`, e.g.
   (the per-paragraph link copy and text copy coexist without conflict).
 - **Resume where you left off** — your reading position is remembered and restored
   on your next visit (a deep `#pN` link always takes precedence).
+- **目錄 (table of contents)** — tap **☰** to open a drawer listing all 37
+  paragraphs with snippets; tap any to jump straight there. It also shows an
+  estimated reading time and lets you switch the body typeface between
+  **楷 (霞鶩文楷)** and **明 (思源宋體 / Noto Serif)**.
+- **Distraction-free scrolling** — in horizontal mode the toolbar tucks away as you
+  read downward and slides back the moment you scroll up; a subtle indicator shows
+  **第 N 段 / 共 37 段** while you scroll.
 - **Reading comfort** — light / 米黃 / 夜間 themes (auto-matching your phone's
   light/dark setting on first visit), A−/A+ font size, a reading-progress bar, and
   the original paragraph numbers in the margin. The dark theme uses a soft warm

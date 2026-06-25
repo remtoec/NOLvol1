@@ -53,8 +53,8 @@ body{
 /* ---- toolbar ---- */
 #bar{
   position:sticky; top:0; z-index:40;
-  display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap;
-  padding:9px max(8px,env(safe-area-inset-left)) 9px max(8px,env(safe-area-inset-right));
+  display:flex; align-items:center; justify-content:center; gap:5px; flex-wrap:wrap;
+  padding:9px max(6px,env(safe-area-inset-left)) 9px max(6px,env(safe-area-inset-right));
   background:color-mix(in srgb,var(--panel) 85%,transparent);
   -webkit-backdrop-filter:saturate(1.3) blur(10px);
   backdrop-filter:saturate(1.3) blur(10px);
@@ -69,7 +69,7 @@ body{
 }
 .seg{
   appearance:none; -webkit-appearance:none; border:0; background:transparent; color:var(--ink);
-  height:36px; min-width:38px; padding:0 9px; border-radius:9px;
+  height:36px; min-width:36px; padding:0 7px; border-radius:9px;
   font-family:inherit; font-size:15px; line-height:1; cursor:pointer;
   display:inline-flex; align-items:center; justify-content:center; gap:5px;
   -webkit-tap-highlight-color:transparent;
@@ -79,34 +79,34 @@ body{
 @media (hover:hover) and (pointer:fine){
   .seg:hover{ background:var(--chip); }
 }
-.theme-seg{ min-width:40px; padding:0; }
+.theme-seg{ min-width:36px; padding:0; }
 .theme-seg .ticon{ font-size:17px; line-height:1; }
 .seg .sub{ font-size:.82em; }
 
 /* sliding layout toggle 直 / 橫 */
 .seg-toggle{ position:relative; }
-.seg-toggle .seg{ position:relative; z-index:1; width:42px; min-width:42px; padding:0; color:var(--ink-soft); }
+.seg-toggle .seg{ position:relative; z-index:1; width:38px; min-width:38px; padding:0; color:var(--ink-soft); }
 .seg-toggle .thumb{
-  position:absolute; top:3px; left:3px; width:42px; height:36px; border-radius:9px;
+  position:absolute; top:3px; left:3px; width:38px; height:36px; border-radius:9px;
   background:var(--chip); z-index:0;
   transition:transform 240ms var(--ease-out);
 }
 body.vertical    #layoutToggle .thumb{ transform:translateX(0); }
-body:not(.vertical) #layoutToggle .thumb{ transform:translateX(42px); }
+body:not(.vertical) #layoutToggle .thumb{ transform:translateX(38px); }
 body.vertical    #layoutToggle .seg[data-layout="v"]{ color:var(--accent); font-weight:700; }
 body:not(.vertical) #layoutToggle .seg[data-layout="h"]{ color:var(--accent); font-weight:700; }
 
 /* jump-to-paragraph */
-.group.jump{ gap:4px; padding-inline:8px 3px; }
+.group.jump{ gap:3px; padding-inline:6px 3px; }
 .jump .jlabel{ font-size:13px; color:var(--ink-soft); }
 .jump input{
-  width:2.2em; height:30px; text-align:center; font-family:inherit; font-size:15px;
+  width:2.4em; height:30px; text-align:center; font-family:inherit; font-size:15px;
   border:0; border-radius:7px; background:var(--bg); color:var(--ink);
   -webkit-appearance:none; appearance:none;
 }
 .jump input::-webkit-outer-spin-button,.jump input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
 .jump input[type=number]{ -moz-appearance:textfield; }
-.jump .go{ min-width:36px; width:36px; padding:0; font-size:18px; color:var(--accent); }
+.jump .go{ min-width:34px; width:34px; padding:0; font-size:18px; color:var(--accent); }
 
 /* ---- masthead ---- */
 header.mast{
@@ -176,10 +176,78 @@ body.vertical .para{ scroll-margin-top:0; scroll-margin-right:24px; }
 .copysel.show{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); pointer-events:auto; }
 .copysel:active{ transform:translateX(-50%) translateY(0) scale(.96); }
 
+/* ---- menu button + auto-hiding toolbar ---- */
+.menu-seg{ min-width:36px; font-size:17px; }
+#bar{ transition:transform 260ms var(--ease-out); will-change:transform; }
+#bar.hidden{ transform:translateY(-100%); }
+
+/* ---- position readout (第 N 段 / 共 N 段) ---- */
+#posind{
+  position:fixed; right:max(10px,env(safe-area-inset-right));
+  bottom:calc(16px + env(safe-area-inset-bottom)); z-index:45;
+  padding:5px 11px; border-radius:999px; font-size:12px; line-height:1; pointer-events:none;
+  background:color-mix(in srgb,var(--panel) 88%,transparent); color:var(--ink-soft);
+  border:1px solid var(--rule); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  opacity:0; transform:translateY(6px); transition:opacity .25s ease,transform .25s ease;
+}
+#posind.show{ opacity:1; transform:translateY(0); }
+
+/* ---- TOC / settings drawer ---- */
+#scrim{ position:fixed; inset:0; z-index:70; background:rgba(0,0,0,.4);
+  opacity:0; transition:opacity .26s ease; }
+#scrim.show{ opacity:1; }
+#drawer{
+  position:fixed; top:0; right:0; z-index:71; height:100%;
+  width:min(86vw,360px); display:flex; flex-direction:column;
+  background:var(--panel); color:var(--ink);
+  border-left:1px solid var(--rule); box-shadow:-12px 0 40px rgba(0,0,0,.28);
+  transform:translateX(100%); transition:transform 300ms var(--ease-out);
+}
+#drawer.open{ transform:translateX(0); }
+.drawer-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  padding:calc(16px + env(safe-area-inset-top)) 16px 12px; border-bottom:1px solid var(--rule);
+}
+.drawer-title{ font-size:1.2em; font-weight:700;
+  font-family:"Noto Serif TC","Source Han Serif TC",serif; }
+.drawer-meta{ font-size:12px; color:var(--ink-soft); margin-top:5px; }
+.drawer-close{ flex:0 0 auto; border:1px solid var(--rule); background:var(--bg); color:var(--ink-soft); }
+.drawer-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-bottom:1px solid var(--rule);
+}
+.set-label{ font-size:14px; color:var(--ink-soft); }
+#fontToggle .seg[data-font="kai"]{ font-family:"LXGW WenKai TC","CJK Fallback",serif; }
+#fontToggle .seg[data-font="song"]{ font-family:"Noto Serif TC","Songti TC",serif; }
+body:not(.font-song) #fontToggle .thumb{ transform:translateX(0); }
+body.font-song      #fontToggle .thumb{ transform:translateX(38px); }
+body:not(.font-song) #fontToggle .seg[data-font="kai"]{ color:var(--accent); font-weight:700; }
+body.font-song      #fontToggle .seg[data-font="song"]{ color:var(--accent); font-weight:700; }
+.toc{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:4px 0 calc(18px + env(safe-area-inset-bottom)); }
+.toc-item{
+  display:flex; align-items:baseline; gap:10px; width:100%;
+  appearance:none; border:0; background:transparent; color:var(--ink); text-align:left;
+  padding:11px 16px; cursor:pointer; font-family:inherit; -webkit-tap-highlight-color:transparent;
+}
+.toc-item:active{ background:var(--chip); }
+.toc-item .toc-n{ flex:0 0 auto; min-width:1.8em; color:var(--accent); font-weight:600;
+  font-size:.9em; font-family:Georgia,serif; }
+.toc-item .toc-snip{ flex:1 1 auto; min-width:0; font-size:.95em; line-height:1.5;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.toc-item.current{ background:color-mix(in srgb,var(--accent) 12%,transparent); }
+.toc-item.current .toc-snip{ font-weight:700; }
+@media (hover:hover) and (pointer:fine){ .toc-item:hover{ background:var(--chip); } }
+
+/* font switch: 明體 (Noto Serif) body for the reading area only */
+body.font-song #reader{
+  font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","Songti SC","PMingLiU","MingLiU",serif;
+}
+
 /* ---- reduced motion ---- */
 @media (prefers-reduced-motion:reduce){
   *{ scroll-behavior:auto !important; }
-  .seg,.pnum,.seg-toggle .thumb,#toast,.copysel,.para,body{
+  .seg,.pnum,.seg-toggle .thumb,#toast,.copysel,.para,body,#drawer,#scrim,#posind,#bar{
     transition-duration:1ms !important;
   }
   .seg:active,.pnum:active{ transform:none; }
@@ -241,9 +309,11 @@ body.vertical #hint.honly{ display:none; }
     <button class="seg" data-layout="h" title="橫排" aria-label="橫排">橫</button>
   </div>
   <div class="group jump" role="group" aria-label="跳到段落">
-    <span class="jlabel">段</span>
-    <input id="jumpInput" type="number" min="1" max="37" inputmode="numeric" placeholder="#" aria-label="段落編號">
+    <input id="jumpInput" type="number" min="1" max="37" inputmode="numeric" placeholder="段#" aria-label="段落編號">
     <button class="seg go" id="jumpBtn" title="前往" aria-label="前往段落">→</button>
+  </div>
+  <div class="group">
+    <button class="seg menu-seg" id="menuBtn" title="目錄與設定" aria-label="開啟目錄與設定" aria-expanded="false">☰</button>
   </div>
 </div>
 
@@ -297,6 +367,27 @@ body.vertical #hint.honly{ display:none; }
 <div id="hint" class="vonly">← 由右至左閱讀，左右滑動翻頁 →</div>
 <div id="toast" role="status" aria-live="polite"></div>
 <button id="copySel" class="copysel" type="button">⧉ 複製所選文字</button>
+<div id="posind" aria-hidden="true"></div>
+
+<div id="scrim" hidden></div>
+<aside id="drawer" aria-hidden="true" aria-label="目錄與設定">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title">目錄</div>
+      <div class="drawer-meta" id="drawerMeta"></div>
+    </div>
+    <button class="seg drawer-close" id="drawerClose" title="關閉" aria-label="關閉目錄">✕</button>
+  </div>
+  <div class="drawer-row">
+    <span class="set-label">字體</span>
+    <div class="seg-toggle" id="fontToggle" role="group" aria-label="字體">
+      <span class="thumb" aria-hidden="true"></span>
+      <button class="seg" data-font="kai" title="楷體 · 霞鶩文楷" aria-label="楷體">楷</button>
+      <button class="seg" data-font="song" title="明體 · 思源宋體" aria-label="明體">明</button>
+    </div>
+  </div>
+  <nav class="toc" id="toc" aria-label="段落目錄"></nav>
+</aside>
 
 <script>
 (function(){
@@ -305,6 +396,7 @@ body.vertical #hint.honly{ display:none; }
   var reader = document.getElementById('reader');
   var content = document.querySelector('.content');
   var progress = document.getElementById('progress');
+  var bar = document.getElementById('bar');
   var THEMES = ['light','sepia','dark'];
   var THEME_LBL = {light:'明亮', sepia:'米黃', dark:'夜間'};
   var THEME_ICON = {light:'☀', sepia:'◐', dark:'☾'};
@@ -364,6 +456,7 @@ body.vertical #hint.honly{ display:none; }
       if(wantVertical === body.classList.contains('vertical')) return; // already there
       var target = currentParagraph();
       applyLayout(wantVertical);
+      showBar();
       if(target) requestAnimationFrame(function(){ scrollToPara(target,false); });
     });
   });
@@ -514,6 +607,102 @@ body.vertical #hint.honly{ display:none; }
   window.addEventListener('pagehide', savePos);
   document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') savePos(); });
 
+  // ---- body font: 楷 (LXGW WenKai) / 明 (Noto Serif), lazy-load Song weights ----
+  var notoBodyLoaded = false;
+  function ensureNotoBody(){
+    if(notoBodyLoaded) return; notoBodyLoaded = true;
+    var l = document.createElement('link'); l.rel='stylesheet';
+    l.href='https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&display=swap';
+    document.head.appendChild(l);
+  }
+  function applyFont(f, persist){
+    var song = (f==='song');
+    body.classList.toggle('font-song', song);
+    if(song) ensureNotoBody();
+    if(persist!==false) save('nol_font', song?'song':'kai');
+  }
+  applyFont(load('nol_font','kai'), false);
+  document.querySelectorAll('#fontToggle .seg').forEach(function(seg){
+    seg.addEventListener('click', function(){ applyFont(seg.getAttribute('data-font'), true); });
+  });
+
+  // ---- TOC / settings drawer ----
+  var menuBtn = document.getElementById('menuBtn');
+  var drawer  = document.getElementById('drawer');
+  var scrim   = document.getElementById('scrim');
+  var toc     = document.getElementById('toc');
+  var allParas = document.querySelectorAll('.para');
+
+  // reading-time estimate (~350 Chinese chars/min) + total count
+  var totalChars = 0;
+  allParas.forEach(function(p){ var t=p.querySelector('.ptext'); if(t) totalChars += t.textContent.length; });
+  document.getElementById('drawerMeta').textContent =
+    '共 ' + MAXN + ' 段 · 約 ' + Math.max(1, Math.round(totalChars/350)) + ' 分鐘';
+
+  // build the table of contents (snippets read from the DOM — no duplicated text in HTML)
+  allParas.forEach(function(p){
+    var n = p.dataset.n;
+    var t = ((p.querySelector('.ptext')||{}).textContent || '').replace(/^\s+/,'');
+    var item = document.createElement('button');
+    item.type='button'; item.className='toc-item'; item.setAttribute('data-n', n);
+    var sn=document.createElement('span'); sn.className='toc-n';   sn.textContent=n;
+    var ss=document.createElement('span'); ss.className='toc-snip'; ss.textContent=t.slice(0,24);
+    item.appendChild(sn); item.appendChild(ss);
+    item.addEventListener('click', function(){ closeDrawer(); jumpTo(n); });
+    toc.appendChild(item);
+  });
+  function markCurrentToc(){
+    var cur = currentParagraph(); var cn = cur && cur.dataset ? cur.dataset.n : null, active=null;
+    toc.querySelectorAll('.toc-item').forEach(function(it){
+      var on = it.getAttribute('data-n')===cn; it.classList.toggle('current', on); if(on) active=it;
+    });
+    if(active) active.scrollIntoView({block:'center'});
+  }
+  function openDrawer(){
+    scrim.hidden=false; markCurrentToc();
+    requestAnimationFrame(function(){ scrim.classList.add('show'); drawer.classList.add('open'); });
+    drawer.setAttribute('aria-hidden','false'); menuBtn.setAttribute('aria-expanded','true');
+    showBar();
+  }
+  function closeDrawer(){
+    scrim.classList.remove('show'); drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true'); menuBtn.setAttribute('aria-expanded','false');
+    setTimeout(function(){ if(!drawer.classList.contains('open')) scrim.hidden=true; }, 320);
+  }
+  menuBtn.addEventListener('click', function(){ drawer.classList.contains('open') ? closeDrawer() : openDrawer(); });
+  scrim.addEventListener('click', closeDrawer);
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && drawer.classList.contains('open')) closeDrawer(); });
+
+  // ---- position readout (appears while scrolling, fades when idle) ----
+  var posind = document.getElementById('posind');
+  var posTick=false, posIdle=null;
+  function showPosInd(){
+    var el = currentParagraph(); if(!el || !el.dataset) return;
+    posind.textContent = '第 ' + el.dataset.n + ' 段 / 共 ' + MAXN + ' 段';
+    posind.classList.add('show');
+    clearTimeout(posIdle); posIdle = setTimeout(function(){ posind.classList.remove('show'); }, 1500);
+  }
+  function queuePosInd(){ if(posTick) return; posTick=true;
+    requestAnimationFrame(function(){ posTick=false; showPosInd(); }); }
+
+  // ---- auto-hiding toolbar (horizontal mode only; disabled for reduced-motion) ----
+  var prefersReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var lastY = window.scrollY||0;
+  function showBar(){ bar.classList.remove('hidden'); }
+  function hideBar(){ if(!drawer.classList.contains('open')) bar.classList.add('hidden'); }
+  function onScrollDir(){
+    if(prefersReduce || body.classList.contains('vertical')){ showBar(); return; }
+    var y = window.scrollY||0;
+    if(y < 90){ showBar(); }
+    else if(y - lastY > 8){ hideBar(); }
+    else if(lastY - y > 8){ showBar(); }
+    lastY = y;
+  }
+  function onScrollExtras(){ onScrollDir(); queuePosInd(); }
+  window.addEventListener('scroll', onScrollExtras, {passive:true});
+  content.addEventListener('scroll', onScrollExtras, {passive:true});
+
   // ---- deep link on load ----
   function gotoHash(smooth){
     var m = /^#p(\d+)$/.exec(location.hash||'');
@@ -528,6 +717,8 @@ body.vertical #hint.honly{ display:none; }
   // initial paint — deep link wins, else resume saved position, else top
   requestAnimationFrame(function(){
     if(!gotoHash(false)){ if(!restorePos()) updateProgress(); }
+    lastY = window.scrollY||0;  // sync so the resume scroll doesn't trigger auto-hide
+    showBar();
   });
 })();
 </script>
