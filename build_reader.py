@@ -43,29 +43,41 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>愛的本質 · 第一卷　第一章 — Irving Singer</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Body face: LXGW WenKai TC (霞鶩文楷) — warm hand-brushed Kai, loaded async & subset, non-blocking -->
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/@fontsource/lxgw-wenkai-tc@5/400.css" onload="this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/lxgw-wenkai-tc@5/400.css"></noscript>
+<!-- Masthead title only: Noto Serif TC (Ming authority) -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --fs: 19px;
+  --fs: 20px;
   --ease-out:cubic-bezier(.23,1,.32,1);
   --bg:#f7f4ec; --panel:#fffdf8; --ink:#26221c; --ink-soft:#6f685c;
   --rule:#e3dccd; --accent:#9a3b2e; --accent-soft:#d8c7a6; --flash:#fbe9c9;
   --bar:#9a3b2e; --chip:#ead9bf; --sel:#f4dfa6;
 }
-body.theme-light{ --bg:#f7f4ec; --panel:#fffdf8; --ink:#26221c; --ink-soft:#6f685c; --rule:#e3dccd; --accent:#9a3b2e; --accent-soft:#d8c7a6; --flash:#fbe9c9; --bar:#9a3b2e; --chip:#ead9bf; --sel:#f4dfa6; }
-body.theme-sepia{ --bg:#ece0c8; --panel:#f5ead2; --ink:#3a2f1d; --ink-soft:#7a6a4c; --rule:#d8c39a; --accent:#8a4a22; --accent-soft:#cdb286; --flash:#f0dcae; --bar:#8a4a22; --chip:#e0c79a; --sel:#e7cd92; }
-body.theme-dark{ --bg:#16140f; --panel:#1d1b15; --ink:#e6dfd0; --ink-soft:#9a9384; --rule:#332f26; --accent:#d98a6a; --accent-soft:#5a4d39; --flash:#3a3220; --bar:#d98a6a; --chip:#3a3024; --sel:#4a3f2c; }
+body.theme-light{ --bg:#f6f1e7; --panel:#fffdf8; --ink:#2b2620; --ink-soft:#6f685c; --rule:#e3dccd; --accent:#9a3b2e; --accent-soft:#d8c7a6; --flash:#fbe9c9; --bar:#9a3b2e; --chip:#ead9bf; --sel:#f4dfa6; }
+body.theme-sepia{ --bg:#ece0c8; --panel:#f5ead2; --ink:#3a2f1d; --ink-soft:#6b5a3a; --rule:#d8c39a; --accent:#8a4a22; --accent-soft:#cdb286; --flash:#f0dcae; --bar:#8a4a22; --chip:#e0c79a; --sel:#e7cd92; }
+body.theme-dark{ --bg:#1b1814; --panel:#22201a; --ink:#d8d0c0; --ink-soft:#8f8878; --rule:#343026; --accent:#e0916f; --accent-soft:#5a4d39; --flash:#3a3220; --bar:#e0916f; --chip:#3a3024; --sel:#4a3f2c; }
 
 ::selection{ background:var(--sel); }
 ::-moz-selection{ background:var(--sel); }
+
+/* metric-matched fallback so the swap from system Songti -> LXGW WenKai TC doesn't reflow the column */
+@font-face{
+  font-family:"CJK Fallback";
+  src:local("Songti TC"),local("PingFang TC"),local("Microsoft JhengHei"),local("PMingLiU");
+  size-adjust:100%; ascent-override:88%; descent-override:12%; line-gap-override:0%;
+}
 
 *{ box-sizing:border-box; }
 html,body{ margin:0; padding:0; }
 body{
   background:var(--bg); color:var(--ink);
-  font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","Songti SC","PMingLiU","MingLiU",serif;
+  font-family:"LXGW WenKai TC","CJK Fallback","Noto Serif TC","Source Han Serif TC","Songti TC","Songti SC","PMingLiU","MingLiU",serif;
   -webkit-text-size-adjust:100%; text-rendering:optimizeLegibility;
   transition:background .25s ease,color .25s ease;
 }
@@ -138,7 +150,8 @@ body:not(.vertical) #layoutToggle .seg[data-layout="h"]{ color:var(--accent); fo
 header.mast{
   text-align:center; padding:26px 18px 8px;
 }
-header.mast .zh{ font-size:1.5em; font-weight:700; letter-spacing:.04em; }
+header.mast .zh{ font-size:1.5em; font-weight:700; letter-spacing:.04em;
+  font-family:"Noto Serif TC","Source Han Serif TC","Songti TC",serif; }
 header.mast .en{ font-size:.82em; color:var(--ink-soft); margin-top:6px; font-style:italic;
   font-family:Georgia,"Times New Roman",serif; }
 header.mast .rule{ width:42px; height:2px; background:var(--accent); margin:14px auto 0; }
@@ -146,20 +159,22 @@ header.mast .rule{ width:42px; height:2px; background:var(--accent); margin:14px
 /* ---- reading area ---- */
 #reader{ padding:8px 0 28vh; }
 .content{
-  max-width:38rem; margin:0 auto;
+  max-width:36rem; margin:0 auto;
   padding:0 max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));
 }
 .para{
-  position:relative; font-size:var(--fs); line-height:2.0;
-  margin:0 0 1.45em; text-align:justify; letter-spacing:.01em;
+  position:relative; font-size:var(--fs); line-height:1.9;
+  margin:0 0 1.7em; text-align:justify; letter-spacing:.02em;
   border-radius:8px; transition:background .6s ease;
+  scroll-margin-top:64px; scroll-margin-bottom:24vh;
 }
+body.vertical .para{ scroll-margin-top:0; scroll-margin-right:24px; }
 .para .ptext{ text-indent:2em; display:block;
   -webkit-user-select:text; user-select:text; }
 .pnum{
   appearance:none; border:0; background:transparent; color:var(--accent);
   font-size:.62em; font-weight:600; opacity:.85; font-family:Georgia,serif;
-  vertical-align:top; margin-inline-end:.15em; padding:.15em .3em; border-radius:6px;
+  vertical-align:top; margin-inline-end:.1em; padding:.45em .5em; border-radius:6px;
   cursor:pointer; line-height:1; user-select:none; -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
   transition:background .15s ease,opacity .15s ease,transform 140ms var(--ease-out);
@@ -245,7 +260,7 @@ body:not(.vertical) #hint.vonly{ display:none; }
 body.vertical #hint.honly{ display:none; }
 </style>
 </head>
-<body class="theme-light vertical">
+<body class="theme-light">
 <div id="progress"></div>
 
 <div id="bar">
@@ -281,7 +296,7 @@ body.vertical #hint.honly{ display:none; }
 __PARAS__
   </div>
 </main>
-<div id="hint" class="honly">← 由右至左閱讀，左右滑動翻頁 →</div>
+<div id="hint" class="vonly">← 由右至左閱讀，左右滑動翻頁 →</div>
 <div id="toast" role="status" aria-live="polite"></div>
 <button id="copySel" class="copysel" type="button">⧉ 複製所選文字</button>
 
@@ -302,25 +317,35 @@ __PARAS__
   // ---- theme ----
   var themeBtn = document.getElementById('themeBtn');
   var themeIcon = document.getElementById('themeIcon');
-  function applyTheme(t){
+  function applyTheme(t, persist){
     THEMES.forEach(function(x){ body.classList.remove('theme-'+x); });
     body.classList.add('theme-'+t);
     themeIcon.textContent = THEME_ICON[t];
     themeBtn.setAttribute('aria-label', '主題：' + THEME_LBL[t] + '（點按切換）');
-    save('nol_theme', t);
+    if(persist!==false) save('nol_theme', t);
   }
-  var theme = load('nol_theme','light');
+  var storedTheme = load('nol_theme', null);
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var theme = storedTheme || (prefersDark ? 'dark' : 'light');
   if(THEMES.indexOf(theme)<0) theme='light';
-  applyTheme(theme);
+  applyTheme(theme, false); // don't lock-in the auto choice on load
+  // follow OS theme changes live, until the reader explicitly picks a theme
+  if(!storedTheme && window.matchMedia){
+    try{
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+        if(load('nol_theme', null)===null){ theme = e.matches ? 'dark' : 'light'; applyTheme(theme, false); }
+      });
+    }catch(e){}
+  }
   themeBtn.addEventListener('click', function(){
     theme = THEMES[(THEMES.indexOf(theme)+1)%THEMES.length];
-    applyTheme(theme);
+    applyTheme(theme, true); // explicit choice — persist it
     showToast(THEME_LBL[theme] + '模式');
   });
 
   // ---- font size ----
-  var fs = parseFloat(load('nol_fs','19'));
-  if(isNaN(fs)) fs=19;
+  var fs = parseFloat(load('nol_fs','20'));
+  if(isNaN(fs)) fs=20;
   function applyFs(){ fs=Math.max(15,Math.min(30,fs)); root.style.setProperty('--fs', fs+'px'); save('nol_fs',String(fs)); }
   applyFs();
   document.getElementById('fsUp').addEventListener('click', function(){ fs+=1.5; applyFs(); updateProgress(); });
@@ -333,7 +358,7 @@ __PARAS__
     // reset relevant scrolls so progress reads correctly
     requestAnimationFrame(updateProgress);
   }
-  var vertical = load('nol_vertical','1')==='1';
+  var vertical = load('nol_vertical','0')==='1';
   applyLayout(vertical);
   document.querySelectorAll('#layoutToggle .seg').forEach(function(seg){
     seg.addEventListener('click', function(){
@@ -470,6 +495,27 @@ __PARAS__
     if(sel && sel.removeAllRanges) sel.removeAllRanges();
   });
 
+  // ---- resume reading position across sessions ----
+  function savePos(){
+    var el = currentParagraph();
+    if(el && el.dataset && el.dataset.n) save('nol_pos', el.dataset.n);
+  }
+  function restorePos(){
+    var n = parseInt(load('nol_pos',''),10);
+    if(isNaN(n) || n<2 || n>MAXN) return false;       // p1 is already the top
+    var el = document.getElementById('p'+n);
+    if(!el) return false;
+    scrollToPara(el,false);
+    showToast('已回到第 ' + n + ' 段');
+    return true;
+  }
+  var posTimer=null;
+  function queueSavePos(){ clearTimeout(posTimer); posTimer=setTimeout(savePos,400); }
+  window.addEventListener('scroll', queueSavePos, {passive:true});
+  content.addEventListener('scroll', queueSavePos, {passive:true});
+  window.addEventListener('pagehide', savePos);
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') savePos(); });
+
   // ---- deep link on load ----
   function gotoHash(smooth){
     var m = /^#p(\d+)$/.exec(location.hash||'');
@@ -481,9 +527,9 @@ __PARAS__
   }
   window.addEventListener('hashchange', function(){ gotoHash(true); });
 
-  // initial paint
+  // initial paint — deep link wins, else resume saved position, else top
   requestAnimationFrame(function(){
-    if(!gotoHash(false)) updateProgress();
+    if(!gotoHash(false)){ if(!restorePos()) updateProgress(); }
   });
 })();
 </script>

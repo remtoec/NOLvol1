@@ -14,20 +14,28 @@ Deep-link to any paragraph by adding `#pN`, e.g.
 
 ## Features
 
-- **直排 / 橫排 toggle** — authentic vertical (top-to-bottom, right-to-left)
-  typesetting by default, or switch to horizontal with a sliding toggle.
+- **Warm, easy-on-the-eyes type** — body set in **LXGW WenKai TC (霞鶩文楷)**, a
+  warm hand-brushed 楷書 whose even, open strokes are gentler for long mobile
+  reading than thin Ming hairlines; the masthead title stays in Noto Serif TC for
+  a more authoritative frame.
+- **橫排 / 直排 toggle** — comfortable horizontal reading by default; switch to
+  authentic vertical (top-to-bottom, right-to-left) typesetting with a sliding toggle.
 - **Jump to paragraph (book-club sync)** — type a paragraph number to jump, and
   the URL updates to `#pN`. Share that link and everyone opens to the same place.
 - **Copy a paragraph link** — tap the small red paragraph number to copy its
   shareable `#pN` link to the clipboard.
 - **Copy passage text** — select any text and tap **複製所選文字** to copy it
   (the per-paragraph link copy and text copy coexist without conflict).
-- **Reading comfort** — light / sepia (米黃) / dark (夜間) themes, A−/A+ font
-  size, a reading-progress bar, and the original paragraph numbers in the margin.
+- **Resume where you left off** — your reading position is remembered and restored
+  on your next visit (a deep `#pN` link always takes precedence).
+- **Reading comfort** — light / 米黃 / 夜間 themes (auto-matching your phone's
+  light/dark setting on first visit), A−/A+ font size, a reading-progress bar, and
+  the original paragraph numbers in the margin. The dark theme uses a soft warm
+  charcoal to reduce night-time glare.
 - **Self-contained & offline** — one `index.html` with the text embedded; no
-  server or internet required. Uses Noto Serif TC online, falling back to the
-  device's built-in 明體/宋體 offline.
-- All preferences (theme, size, layout) persist across visits via `localStorage`.
+  server required. Web fonts load from a CDN with `font-display:swap` and degrade
+  gracefully to the device's built-in 明體/宋體 when offline.
+- All preferences (theme, size, layout, position) persist across visits via `localStorage`.
 
 ## How it's built
 
