@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>愛的本質 · 第一卷　第一章 — Irving Singer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fs: 19px;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --bg:#f7f4ec; --panel:#fffdf8; --ink:#26221c; --ink-soft:#6f685c;
+  --rule:#e3dccd; --accent:#9a3b2e; --accent-soft:#d8c7a6; --flash:#fbe9c9;
+  --bar:#9a3b2e; --chip:#ead9bf; --sel:#f4dfa6;
+}
+body.theme-light{ --bg:#f7f4ec; --panel:#fffdf8; --ink:#26221c; --ink-soft:#6f685c; --rule:#e3dccd; --accent:#9a3b2e; --accent-soft:#d8c7a6; --flash:#fbe9c9; --bar:#9a3b2e; --chip:#ead9bf; --sel:#f4dfa6; }
+body.theme-sepia{ --bg:#ece0c8; --panel:#f5ead2; --ink:#3a2f1d; --ink-soft:#7a6a4c; --rule:#d8c39a; --accent:#8a4a22; --accent-soft:#cdb286; --flash:#f0dcae; --bar:#8a4a22; --chip:#e0c79a; --sel:#e7cd92; }
+body.theme-dark{ --bg:#16140f; --panel:#1d1b15; --ink:#e6dfd0; --ink-soft:#9a9384; --rule:#332f26; --accent:#d98a6a; --accent-soft:#5a4d39; --flash:#3a3220; --bar:#d98a6a; --chip:#3a3024; --sel:#4a3f2c; }
+
+::selection{ background:var(--sel); }
+::-moz-selection{ background:var(--sel); }
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","Songti SC","PMingLiU","MingLiU",serif;
+  -webkit-text-size-adjust:100%; text-rendering:optimizeLegibility;
+  transition:background .25s ease,color .25s ease;
+}
+
+/* ---- progress bar ---- */
+#progress{
+  position:fixed; top:0; left:0; height:3px; width:0;
+  background:var(--bar); z-index:50; transition:width .08s linear;
+}
+
+/* ---- toolbar ---- */
+#bar{
+  position:sticky; top:0; z-index:40;
+  display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap;
+  padding:9px max(8px,env(safe-area-inset-left)) 9px max(8px,env(safe-area-inset-right));
+  background:color-mix(in srgb,var(--panel) 85%,transparent);
+  -webkit-backdrop-filter:saturate(1.3) blur(10px);
+  backdrop-filter:saturate(1.3) blur(10px);
+  border-bottom:1px solid var(--rule);
+}
+/* grouped "pill" containers */
+.group,.seg-toggle{
+  display:inline-flex; align-items:center;
+  background:var(--panel); border:1px solid var(--rule);
+  border-radius:12px; padding:3px;
+  box-shadow:0 1px 1px rgba(0,0,0,.04);
+}
+.seg{
+  appearance:none; -webkit-appearance:none; border:0; background:transparent; color:var(--ink);
+  height:36px; min-width:38px; padding:0 9px; border-radius:9px;
+  font-family:inherit; font-size:15px; line-height:1; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform 140ms var(--ease-out), background-color 160ms ease, color 160ms ease;
+}
+.seg:active{ transform:scale(.94); }
+@media (hover:hover) and (pointer:fine){
+  .seg:hover{ background:var(--chip); }
+}
+.theme-seg{ min-width:40px; padding:0; }
+.theme-seg .ticon{ font-size:17px; line-height:1; }
+.seg .sub{ font-size:.82em; }
+
+/* sliding layout toggle 直 / 橫 */
+.seg-toggle{ position:relative; }
+.seg-toggle .seg{ position:relative; z-index:1; width:42px; min-width:42px; padding:0; color:var(--ink-soft); }
+.seg-toggle .thumb{
+  position:absolute; top:3px; left:3px; width:42px; height:36px; border-radius:9px;
+  background:var(--chip); z-index:0;
+  transition:transform 240ms var(--ease-out);
+}
+body.vertical    #layoutToggle .thumb{ transform:translateX(0); }
+body:not(.vertical) #layoutToggle .thumb{ transform:translateX(42px); }
+body.vertical    #layoutToggle .seg[data-layout="v"]{ color:var(--accent); font-weight:700; }
+body:not(.vertical) #layoutToggle .seg[data-layout="h"]{ color:var(--accent); font-weight:700; }
+
+/* jump-to-paragraph */
+.group.jump{ gap:4px; padding-inline:8px 3px; }
+.jump .jlabel{ font-size:13px; color:var(--ink-soft); }
+.jump input{
+  width:2.2em; height:30px; text-align:center; font-family:inherit; font-size:15px;
+  border:0; border-radius:7px; background:var(--bg); color:var(--ink);
+  -webkit-appearance:none; appearance:none;
+}
+.jump input::-webkit-outer-spin-button,.jump input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.jump input[type=number]{ -moz-appearance:textfield; }
+.jump .go{ min-width:36px; width:36px; padding:0; font-size:18px; color:var(--accent); }
+
+/* ---- masthead ---- */
+header.mast{
+  text-align:center; padding:26px 18px 8px;
+}
+header.mast .zh{ font-size:1.5em; font-weight:700; letter-spacing:.04em; }
+header.mast .en{ font-size:.82em; color:var(--ink-soft); margin-top:6px; font-style:italic;
+  font-family:Georgia,"Times New Roman",serif; }
+header.mast .rule{ width:42px; height:2px; background:var(--accent); margin:14px auto 0; }
+
+/* ---- reading area ---- */
+#reader{ padding:8px 0 28vh; }
+.content{
+  max-width:38rem; margin:0 auto;
+  padding:0 max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));
+}
+.para{
+  position:relative; font-size:var(--fs); line-height:2.0;
+  margin:0 0 1.45em; text-align:justify; letter-spacing:.01em;
+  border-radius:8px; transition:background .6s ease;
+}
+.para .ptext{ text-indent:2em; display:block;
+  -webkit-user-select:text; user-select:text; }
+.pnum{
+  appearance:none; border:0; background:transparent; color:var(--accent);
+  font-size:.62em; font-weight:600; opacity:.85; font-family:Georgia,serif;
+  vertical-align:top; margin-inline-end:.15em; padding:.15em .3em; border-radius:6px;
+  cursor:pointer; line-height:1; user-select:none; -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s ease,opacity .15s ease,transform 140ms var(--ease-out);
+}
+.pnum:active{ transform:scale(.9); }
+.pnum::after{ content:"🔗"; font-size:.82em; margin-inline-start:.15em;
+  opacity:0; transition:opacity .15s ease; }
+@media (hover:hover) and (pointer:fine){
+  .pnum:hover{ background:var(--accent-soft); opacity:1; }
+  .pnum:hover::after{ opacity:.7; }
+}
+.para.flash{ background:var(--flash); }
+
+/* ---- toast ---- */
+#toast{
+  position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink); color:var(--bg);
+  padding:9px 16px; border-radius:999px; font-size:14px; line-height:1;
+  box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:60;
+  opacity:0; pointer-events:none; transition:opacity .2s ease,transform .2s ease;
+  max-width:80vw; text-align:center;
+}
+#toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ---- copy-selected-text pill ---- */
+.copysel{
+  position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(10px) scale(.96);
+  background:var(--accent); color:#fff; border:0;
+  padding:11px 18px; border-radius:999px; font-family:inherit; font-size:14px; line-height:1;
+  box-shadow:0 8px 24px rgba(0,0,0,.28); z-index:61; cursor:pointer;
+  opacity:0; pointer-events:none; -webkit-tap-highlight-color:transparent;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:opacity 180ms var(--ease-out),transform 180ms var(--ease-out);
+}
+.copysel.show{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); pointer-events:auto; }
+.copysel:active{ transform:translateX(-50%) translateY(0) scale(.96); }
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion:reduce){
+  *{ scroll-behavior:auto !important; }
+  .seg,.pnum,.seg-toggle .thumb,#toast,.copysel,.para,body{
+    transition-duration:1ms !important;
+  }
+  .seg:active,.pnum:active{ transform:none; }
+}
+
+/* ---- vertical 直排 ---- */
+/* In vertical mode the page itself does not scroll; the body is a flex column
+   (toolbar + masthead pinned) and only .content scrolls horizontally. */
+body.vertical{
+  display:flex; flex-direction:column;
+  height:100vh; height:100dvh; overflow:hidden;
+}
+body.vertical #reader{
+  writing-mode:vertical-rl; text-orientation:upright;
+  flex:1 1 auto; min-height:0; padding:6px 0;
+  display:flex;
+}
+body.vertical .content{
+  max-width:none; width:100%; height:100%; margin:0;
+  padding:10px max(18px,env(safe-area-inset-right)) 10px max(18px,env(safe-area-inset-left));
+  overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
+}
+body.vertical .para{
+  line-height:2.05; text-align:justify; margin:0 1.6em 0 0;
+  letter-spacing:.02em;
+}
+body.vertical .para .ptext{ text-indent:2em; }
+body.vertical .pnum{ writing-mode:horizontal-tb; text-orientation:mixed;
+  display:inline-block; vertical-align:top; }
+/* hide masthead in 直排 to maximize reading space */
+body.vertical header.mast{ display:none; }
+/* Latin runs read better rotated in vertical flow */
+body.vertical .para{ text-orientation:mixed; }
+
+/* numerals stay upright/combined where short */
+.para :is(.ptext){ }
+
+#hint{ text-align:center; color:var(--ink-soft); font-size:12px; padding:0 0 18px; }
+body:not(.vertical) #hint.vonly{ display:none; }
+body.vertical #hint.honly{ display:none; }
+</style>
+</head>
+<body class="theme-light vertical">
+<div id="progress"></div>
+
+<div id="bar">
+  <div class="group">
+    <button class="seg theme-seg" id="themeBtn" title="切換主題" aria-label="切換主題">
+      <span class="ticon" id="themeIcon">☀</span>
+    </button>
+  </div>
+  <div class="group" role="group" aria-label="字級">
+    <button class="seg" id="fsDown" title="縮小字級" aria-label="縮小字級">A<span class="sub">−</span></button>
+    <button class="seg" id="fsUp" title="放大字級" aria-label="放大字級">A<span class="sub">＋</span></button>
+  </div>
+  <div class="seg-toggle" id="layoutToggle" role="group" aria-label="排版方向">
+    <span class="thumb" aria-hidden="true"></span>
+    <button class="seg" data-layout="v" title="直排" aria-label="直排">直</button>
+    <button class="seg" data-layout="h" title="橫排" aria-label="橫排">橫</button>
+  </div>
+  <div class="group jump" role="group" aria-label="跳到段落">
+    <span class="jlabel">段</span>
+    <input id="jumpInput" type="number" min="1" max="37" inputmode="numeric" placeholder="#" aria-label="段落編號">
+    <button class="seg go" id="jumpBtn" title="前往" aria-label="前往段落">→</button>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="zh">愛的本質 · 第一卷　第一章</div>
+  <div class="en">Irving Singer — The Nature of Love, Vol. 1, Ch. 1</div>
+  <div class="rule"></div>
+</header>
+
+<main id="reader">
+  <div class="content">
+<p class="para" id="p1" data-n="1"><button class="pnum" type="button" data-n="1" title="複製此段連結" aria-label="複製第 1 段連結">1</button><span class="ptext">我從這個想法出發：愛是一種對事物進行估值（valuing）的方式。它是對「愛的對象」（object of love）——即任何被愛的人或事物——所做出的正面回應。愛以一種獨特的方式，肯定了這個對象的美好。有些哲學家說，愛是在被愛者身上尋找有價值之處；另一些哲學家則說，愛創造了價值——意即愛使被愛者在某方面成為客觀上有價值的存在。這兩種說法常常為真，但有時也為假；因此，兩者都無法解釋「愛」究竟屬於哪一種估值。</span></p>
+<p class="para" id="p2" data-n="2"><button class="pnum" type="button" data-n="2" title="複製此段連結" aria-label="複製第 2 段連結">2</button><span class="ptext">在研究愛與估值之間的關係時，讓我們避免純粹語義上的困難。「愛」這個詞有時意味著非常喜歡，例如一個人說他「愛」他正在吃的食物。它有時意味著強迫性地渴求，例如一個神經症患者說他無法控制自己對一個女人的感情。在這些以及類似的情況下，這個詞並不肯定對象的美好。非常喜歡某樣東西，與認為它是好的，並不相同；而強迫性慾望的對象之所以吸引人，恰恰可能是因為它被感受為壞的。這些用法對於「愛作為對一個被珍視對象的正面回應」這一概念而言，只是邊緣性的。當我們一般性地使用「愛」這個詞時，我們暗含著一種珍視（prizing）、珍惜（cherishing）、關心（caring about）的行為——所有這些都構成了一種估值的模式。</span></p>
+<p class="para" id="p3" data-n="3"><button class="pnum" type="button" data-n="3" title="複製此段連結" aria-label="複製第 3 段連結">3</button><span class="ptext">但什麼是估值或評價呢？想想一個人為一棟房子定價時做的事情。他確立各種事實——建築的面積、物理狀況、維修費用、與學校的距離。然後，他根據這些事實對於一個假想的潛在買家群體的重要程度，對它們加以權衡。從事這項活動的專家被稱為估價師（appraisers）；這項活動本身就是評價或評估（appraisal / appraising）。它試圖找出事物相對於某一人類利益共同體所具有的客觀價值。我之所以稱這種價值為「客觀的」，是因為儘管它只在有人想要這棟房子的前提下才存在，但這個估值是可以接受公開驗證的。只要他們對相關情況取得共識——房子的狀況如何、相關買家群體偏好什麼——所有公正的估價師都應該得出相近的評估結果，無論他們個人對這棟特定房子有什麼感受。換言之，評估是經驗科學的一個分支，專門致力於確定價值。</span></p>
+<p class="para" id="p4" data-n="4"><button class="pnum" type="button" data-n="4" title="複製此段連結" aria-label="複製第 4 段連結">4</button><span class="ptext">但現在想像一下，設定價格的人不是一位估價師，而是一位潛在的買家。他所設定的價格不必與估價師的一致。因為他所做的不僅僅是估算客觀價值：他還要決定這棟房子對他而言值多少。在他的偏好與他人不同的程度上，這棟房子對他就有不同的價值。藉由引入這類考量，我們將對象與一個特定個人的——可能頗為特異的——利益聯繫起來：他的喜好、他的需求、他的欲求、他的慾望。歸根結底，所有客觀價值都依賴於這類利益。估價師必須衡量的那個買家共同體，本身不過是一群個人的集合。估價師只是預測他們每個人可能願意為這棟房子支付多少。與此同時，每位買家自己也必須在某種程度上充當估價師；因為他至少需要對其他買家會出什麼價有一個大致的概念。此外，每個人都必須權衡——也就是評估——自己各種特定利益的相對重要性；而且他必須估量這棟房子是否能夠滿足這些利益。原則上，這些判斷是可以驗證的。它們也可能出錯：例如，當一個人以為某些慾望對他的重要性超過了實際情況，或者當他期望從一個對象獲得超出其所能提供的好處時。決定某樣東西對自己值多少，我們可以稱之為「個人評價」（individual appraisal）。它不同於估價師所做的事；它所確定的是一種純粹的個人價值（individual value），有別於任何客觀價值。</span></p>
+<p class="para" id="p5" data-n="5"><button class="pnum" type="button" data-n="5" title="複製此段連結" aria-label="複製第 5 段連結">5</button><span class="ptext">現在，帶著以上的理解，我要提出：愛創造了一種新的價值，一種不可化約為某物可能同時具有的個人價值或客觀價值的價值。這種進一步的估值類型，我稱之為「賦予」（bestowal）。個人價值和客觀價值都依賴於對象滿足先在利益的能力——需求、慾望、欲求，或任何驅使我們趨向此物而非彼物的東西。被賦予的價值則不同。它由肯定性的關係本身所創造，由那個做出正面回應的行為本身所創造——賦予一個對象以情感上的、滲透性的重要性，而不管它是否有能力滿足任何利益。在這裡，談論可驗證性是沒有意義的；儘管賦予可能往往是有害的、不明智的、甚至是不道德的，但它不可能像一個評價那樣犯錯。因為此時，是估值活動本身創造了價值。</span></p>
+<p class="para" id="p6" data-n="6"><button class="pnum" type="button" data-n="6" title="複製此段連結" aria-label="複製第 6 段連結">6</button><span class="ptext">想想當一個人開始愛上他所購買的房子時會發生什麼。除了作為有用之物、滿足先前慾望的東西之外，這棟房子對他獲得了一種特殊的價值。它現在是「他的」房子——不僅僅作為一項財產或一個遮風避雨的手段，更作為他所關心的事物，他情感生活的一部分。當然，我們也會關心純粹具有實用性的對象。我們因為它們所提供的好處而需要它們。但在愛的過程中，這個人建立了另一種關係。他賦予了這棟房子一種超越其個人價值或客觀價值的重要性。它成為了他注意力的焦點，並且可能成為他個人投入（personal commitment）的對象。僅僅藉由以這種方式投入自身，這個人就賦予了這棟房子一種它本來不可能擁有的價值。</span></p>
+<p class="para" id="p7" data-n="7"><button class="pnum" type="button" data-n="7" title="複製此段連結" aria-label="複製第 7 段連結">7</button><span class="ptext">我們也可以說，這位房主的行為方式，彷彿他的房子「為了它自身」（for its own sake）就是有價值的。而在某種意義上確實如此。因為他所賦予的價值並不依賴於房子滿足需求的能力。這並不是說愛必然會削弱那種能力。恰恰相反，愛往往會增強它——藉由提供若沒有賦予所構成的那種特殊依戀就不可能獲得的享受機會。因為關心這棟房子，這個人可能會發現新的、更令人滿足的方式來居住其中。與此同時，對象獲得了一種自主性（autonomy）。房子呈現出一種存在感（presence），獲得了一種尊嚴（dignity）。它提出要求，甚至彷彿擁有自己的人格（personality）、自己的需求。在順應這些「需求」時——也許是將房子修復到早先的狀態，或者完成它固有的設計——房主可能不受任何其他考量的引導。</span></p>
+<p class="para" id="p8" data-n="8"><button class="pnum" type="button" data-n="8" title="複製此段連結" aria-label="複製第 8 段連結">8</button><span class="ptext">在人與人之間的愛中，類似的事情也會發生。因為人也可以被評價；而且人也可以被估量為超越評價的價值。當我們說一個女人美麗或一個男人英俊，或者說一個男人或女人在任何其他方面是好的，我們就是在歸屬（ascribe）客觀價值。這始終是某個人類利益共同體的函數，儘管我們可能難以指明是哪一個共同體。而且在所有共同體中，人們對彼此都具有個人價值。我們是彼此滿足的手段，而我們不斷地根據各自的個人利益來評估彼此。無論多麼微妙，我們總是在為他人——也為自己——標定價格。但我們也以愛的方式賦予價值。此時，我們對另一個人的回應，是將其視為不可化約為任何評價體系的存在。愛者對被愛者作為一個人（person）而產生興趣，而不僅僅是作為一件商品（commodity）——儘管她也可能是商品。（當然，愛者可以是女性，被愛者可以是男性；但為了簡潔和語法上的方便，我將大致沿用舊的慣例，以「他」指稱愛者，以「她」指稱被愛者。）他將重要性加諸於她的需求和慾望之上，即使這些需求和慾望並不促進他自己的滿足。無論她的人格如何，他都給予它一種離開了他的愛的態度就不會擁有的價值。在與愛者的關係中，被愛者已經變得為了她自身而有價值。</span></p>
+<p class="para" id="p9" data-n="9"><button class="pnum" type="button" data-n="9" title="複製此段連結" aria-label="複製第 9 段連結">9</button><span class="ptext">因此，在人與人之間的愛中，人們在彼此的個人價值或客觀價值之上，還向彼此賦予價值。愛的互惠（reciprocity）發生在每一位參與者既接受被賦予的價值、同時也向對方賦予價值的時候。互惠一直被視為愛的一種理想結果。然而，由於互惠不一定會發生，我將愛者定義為賦予價值的人，將被愛者定義為接受價值的人。愛者僅僅藉由將自身依附和承諾於被愛者，就使她變得有價值。儘管她可能滿足他的需求，他卻拒絕僅僅將她當作工具來使用。作為一個人去愛一個女人，意味著為了評價所可能發現的那些價值而渴求她，但同時將自己的渴求置於一個無論這些價值如何都肯定她的重要性的脈絡之中。最終，被愛者可能不再是作為有用之人而對我們有意義。將她視為目的，我們可能只想著我們如何能夠對她有用。但仍然是我們在思考、在行動、在做出這種肯定性的回應。只有在與我們的賦予的關係中，另一個人才享有愛所創造的那種價值。</span></p>
+<p class="para" id="p10" data-n="10"><button class="pnum" type="button" data-n="10" title="複製此段連結" aria-label="複製第 10 段連結">10</button><span class="ptext">當我說愛賦予價值時，我並不是在指愛者向他們所愛的人大量贈送好東西這一事實。禮物有時可以象徵愛，但它們永遠無法證明愛的存在。愛與給予並不是同義詞。我們確實會說一個人「給予愛」給另一個人，但所給出的東西幾乎不像我們通常所說的禮物。甚至說愛者「獻出自己」也有些誤導。愛不必然是自我犧牲的。在對另一個人做出肯定性回應時，愛者創造了某種東西，而不必在自身中失去任何東西。賦予價值是增益（augment）愛者自身的存在，也增益被愛者的存在。賦予僅僅藉由情感依附的力量，就生成了一個新的共同體（society）——一個使愛者們得以捨棄許多在通常情況下會將他們隔開的慣例的共同體。但這樣的親密只是用以辨識賦予的諸多標準之一。</span></p>
+<p class="para" id="p11" data-n="11"><button class="pnum" type="button" data-n="11" title="複製此段連結" aria-label="複製第 11 段連結">11</button><span class="ptext">價值的賦予以許多不同的方式展現自身，而這些方式不必全部同時出現，也不必以同等的強度出現：藉由關心被愛者的需求和關切；藉由希望使她受益或保護她；藉由為她的成就感到欣悅；藉由鼓勵她的獨立，同時也接受和支撐她的依賴；藉由尊重她的個體性；藉由給予她快樂；藉由與她一同享受快樂；藉由在她在場時感到喜悅、在她不在時感到憂傷；藉由與她分享想法和情感；藉由同情她的軟弱並依靠她的力量；藉由發展共同的追求；藉由讓她成為他的第二天性——「她的微笑、她的蹙眉、她的起伏跌宕」——藉由感到需要將他們的共同體擴展到其他人身上，使他們能夠共同向這些人賦予價值；藉由渴望擁有可以延續他們的愛的孩子。這些不是充分且必要的條件；但它們的出現會給我們理由認為，一個賦予的行為已經發生了。</span></p>
+<p class="para" id="p12" data-n="12"><button class="pnum" type="button" data-n="12" title="複製此段連結" aria-label="複製第 12 段連結">12</button><span class="ptext">透過賦予，愛者們共同擁有「一種生活」。愛者向被愛者致以敬意（tribute），藉由回應她的感受來表達他自己的感受。如果他送她珍貴的禮物，這些禮物將意味著他也珍視她所看重的東西；如果他為了她而做出犧牲，他便表明了她的福祉對他有多大的分量。這彷彿他在宣告：凡是對她而言真實的，對他而言也同樣真實。在被愛者純粹的人格之上，他賦予了一個價值的框架——從他自身發出，卻聚焦於她。愛者們在那些很可能會被忽略的特質上流連。無論是感官的還是禮貌的，激烈的還是平靜的，粗率的還是溫柔的，愛者的回應在熱忱上有所變化，但始終是無償的（gratuitous）。它藉由把被愛者當作某個人（someone）來對待，而使她獲得尊嚴——這裡的「某個人」帶有斜體所暗示的全部強調意味。儘管她獨立於我們的需求之外，她也是我們注意力的重要對象。我們展現出對她的獨特性的接納，意即我們樂於對這些獨特性做出回應。回應本身就是一種肯定，即使它引發了諸如憤怒和嫉妒這樣令人不快的情緒。這些情緒不必然與愛相對立；它們甚至可能是愛的標誌。在許多情況下，一個人無法在不伴隨不快情緒的情況下回應另一個人，正如一位父親若不偶爾懲罰他任性的孩子，就無法與他保持聯繫。愛消失的時刻，是當我們拒絕對方，將他貶低為虛無，或者表達出我們的漠然。因為那時我們不再是在賦予價值，而是撤回了它。</span></p>
+<p class="para" id="p13" data-n="13"><button class="pnum" type="button" data-n="13" title="複製此段連結" aria-label="複製第 13 段連結">13</button><span class="ptext">一般而言，每一種情緒或慾望，一旦作為對一個獨立存在者的正面回應而發揮作用，就能對愛有所貢獻。如果一個女人僅僅是性滿足的手段，那麼可以說一個男人想要她，但不能說他愛她。要使他的性慾成為愛的一部分，它必須作為回應這個特定女人的性格和特殊屬性的一種方式而運作。慾望為了某種私人的滿足而追求它所追求的東西，而愛則要求對我們稱之為「另一個人」的那種模糊的複雜性產生興趣。難怪愛者聽起來像形上學家，而科學家則在慾望的研究中更為自在。因為愛是一種沒有明確目標（objective）的態度。透過愛，一個人肯定了另一個人的重要性，正如一位畫家藉由以銳利的輪廓界定一個形象來突顯它。但被愛者不是一個被畫出的形象。她不是靜態的：她是流動的、變化的、不可界定的——活的。愛者所關注的是一個人。而誰能說那究竟是什麼？</span></p>
+<p class="para" id="p14" data-n="14"><button class="pnum" type="button" data-n="14" title="複製此段連結" aria-label="複製第 14 段連結">14</button><span class="ptext">在哲學史上，賦予和評價常常被混為一談，也許是因為它們都是估值的類型。愛與兩者都有關聯；它們在愛之中交織。除非我們進行評價，否則我們就無法賦予一種超越評價的價值；而沒有賦予，就不會有愛。我們可以說愛者接受彼此，甚至如其所是地接納對方。但這不必然意味著對某個未知存在的盲目屈從。在愛中，我們關注被愛者，意即我們回應她之所是。為了使這種努力成功，它必須伴隨著正當合理的評價——既是客觀的，也是個人的。被愛者的客觀美貌和善良會使愛者喜悅，正如她的缺陷會使他苦惱。在她身上，如同在每一個其他人身上一樣，這些都是重要的屬性。愛者若沒有一套評價體系，怎麼能知道這些屬性是什麼？又怎麼能幫助她實現她的潛能——假定那是她所想要的？當然，在向這個女人賦予價值時，愛者會「強調正面的一面」（accentuate the positive），並經歷一種任何無利害關係的旁觀者都不會有的個人投入。他會感到一種切身的關切，關切被愛者身上好的屬性能夠延續、壞的屬性能夠減少。但若沒有客觀評價，這一切都不可能。</span></p>
+<p class="para" id="p15" data-n="15"><button class="pnum" type="button" data-n="15" title="複製此段連結" aria-label="複製第 15 段連結">15</button><span class="ptext">更為重要的是個人評價所扮演的角色。我們所愛的人，通常是滿足我們的需求和慾望的人。她可能在我們雙方都未充分意識到這些滿足的全部範圍的情況下做到這一點；而且，也許所有的個人價值在某種程度上都建基於無意識的效果之上。不管情形如何，我們對另一個人的經驗包含了一個龐大的個人評估*網絡，這些評估持續不斷地在進行中，並且可以為意識所及。在每一個時刻，我們的關切都在相對於另一個人而被滿足或受挫、被實現或被阻撓、被強化或被削弱。個人價值很少是穩定的。它隨著我們在獲取所欲之物上的成功或失敗而變化。而當這種變化發生時，我們對被愛者的感知也隨之改變。儘管愛者將價值賦予這個女人，視她為一個獨立自主的人，但她始終會是他經驗中的一個人——一個他需要且可能也需要他的人，一個其本性最終可能順應他的傾向的人，反之亦然。愛的態度所包含的個人評價，可能比任何其他態度都更多，而不是更少。否則，一個必須從自己的觀點出發來回應的愛者，又怎麼能真正地關心被愛者呢？</span></p>
+<p class="para" id="p16" data-n="16"><button class="pnum" type="button" data-n="16" title="複製此段連結" aria-label="複製第 16 段連結">16</button><span class="ptext">愛若不是評價伴隨著價值的賦予，就不成其為愛。但在這種結合存在之處，每一次評價都可能引向進一步的賦予。藉由揭示被愛者身上的卓越之處，評價（無論是個人的還是客觀的）使我們更容易欣賞她。藉由揭示她的缺陷和不完美，評價則增加了為她的利益而行動的重要性。愛因此可以涵攝一切可能的評價。一旦賦予發生了，一個男人可能根本不在乎他的被愛者不被其他男人視為可欲的。在有選擇的情況下，他可能寧願選擇她，而非性吸引力更強的女人。他的愛是一種補償甚至克服負面評價的方式。如果它是對所接受之價值的回報，愛就會變成感恩（gratitude）；如果它是試圖給予超過對象所提供的，它就會變成慷慨（generosity）或屈尊（condescension）。這些是相關的態度，但愛不同於它們，因為愛賦予價值時不經計算。它賦予重要性，無論對象值多少。</span></p>
+<p class="para" id="p17" data-n="17"><button class="pnum" type="button" data-n="17" title="複製此段連結" aria-label="複製第 17 段連結">17</button><span class="ptext">當評價單獨運作時，我們的態度會朝科學、野心或道德的方向發展。要做「正確的事」，我們不需要向另一個人賦予價值；我們只需要認清他性格的真相並做出適當的行動。欣賞一個女人的優越，我們可能把她當作美好生活的證據而為之欣喜。我們對她感受到的是休謨所稱的「贊許之感」（the sense of approbation）。我們覺得她在社會上有用或在道德上值得稱許，但這並不是說她激發了我們的愛。如果她有缺點，這些缺點要麼冒犯了我們的道德感受力，要麼引發了我們的善意。簡言之，我們將這個女人作為一種抽象來回應——作為一個可能更好或更壞的某物，一個供我們判斷或行動的機會，而不是一個我們所愛的人。沒有賦予的評價可能導致我們不顧他人的意願去改變他們。作為道德家或立法者，或作為盡責的父母，我們甚至可能認為這就是我們應該有的行為方式。法官會在自己與罪犯之間維持距離，而他完全準備好為了社會的更大利益而犧牲罪犯的福祉。父母會管教孩子，希望以「最有益的方式」來塑造他。偉大的制度常常建立在這種道德態度之上。但這不是一種愛的態度。我們並不是在對他人做出肯定性的回應。我們只是在做我們希望是符合他們最大利益——或者社會最大利益——的事。</span></p>
+<p class="para" id="p18" data-n="18"><button class="pnum" type="button" data-n="18" title="複製此段連結" aria-label="複製第 18 段連結">18</button><span class="ptext">當愛介入時，道德變得更加個人化，但也更加不穩定。幾乎不可能想像一個人在賦予價值的同時不關心對方的福祉。在這個程度上，愛蘊含著善意（benevolence）。然而，愛者並不是為了做正確的事而行善。在愛另一個人的時候，我們尊重他改善自身的渴望。如果我們提供幫助，我們這樣做是因為他想要變得比現在更好，而不是因為我們認為他應該如此。愛與道德不必然分歧，但它們常常分歧。因為愛在本質上不是道德的。沒有任何保證它會在恰當的時候、以恰當的方式、恰當地賦予價值。透過愛，我們享受另一個人如其所是的樣子，包括他的道德狀態；然而這種享受本身可能違反道德的要求。倫理態度必須始終由評價而非賦予來主導。它必須將個人置於與他人的關係中來考量，視他為眾多擁有平等訴求的人中的一個。面對一個特定之人的存在，道德告訴我們要挑選那些最可取的屬性。這就像一位廚師製作一道上好的燉菜，突出一種風味而抑制另一種。廚師不把食材當作獨特的或自足的實體來關心，而只把它們當作好吃的東西。然而在愛一個人的時候，我們實踐的是一種非道德的忠誠——就像那位明知兒子有罪卻仍然站在他身邊的母親。她的忠誠不必然是不道德的；儘管她愛她的兒子，她可能認識到他必須受到懲罰。但如果她賦予孩子的價值使她對他所造成的傷害視而不見，阻止她將他交給警方，甚至引導她鼓勵他繼續犯罪呢？她的愛可能因為這樣的忠誠而加深，但它將建基於有缺陷的評價之上，而且不會是一種合乎道德的愛。</span></p>
+<p class="para" id="p19" data-n="19"><button class="pnum" type="button" data-n="19" title="複製此段連結" aria-label="複製第 19 段連結">19</button><span class="ptext">評價與賦予之間的混淆，可能源於愛者說話的方式。愛另一個人就是以極大的重視來對待他，將一種新的、個人性的價值加諸於他。但當愛者描述他們的被愛者時，他們有時聽起來彷彿她僅僅因為是她自己就是完美的。在關心某個人、關注她、肯定她之所以為她的重要性時，愛者看起來像是一個評估了某個對象並發現它極有價值的人。儘管他是在賦予價值，愛者卻似乎在宣稱被愛者的客觀美好。彷彿他在預測所有可能的評價的結果，並堅持認為它們永遠都會是有利的。</span></p>
+<p class="para" id="p20" data-n="20"><button class="pnum" type="button" data-n="20" title="複製此段連結" aria-label="複製第 20 段連結">20</button><span class="ptext">如果我們對愛者的語言使用方式有任何疑慮，我們應該留意他通常會加上的個人附語。他不會說「那個女人是完美的」，而是說「對我而言她是完美的」或「我覺得她很wonderful」。以這種方式說話，他透露出客觀評價並不決定他的態度。因為客觀評價將對象置於一個估值者共同體的關係之中，而愛則創造自己的共同體。某個社會中的男性可能都仰慕一位「官方美人」——如奧特加（Ortega）所稱。每個男性都可能向她的出眾品質致敬，彷彿這位女士是一件偉大的藝術品；有些人會想要佔有她，就像他們會想要竊取王冠上的珠寶。但這與愛不同，因為愛涉及的是一種不同類型的回應——更親密的、更個人性的、也更具創造性的。</span></p>
+<p class="para" id="p21" data-n="21"><button class="pnum" type="button" data-n="21" title="複製此段連結" aria-label="複製第 21 段連結">21</button><span class="ptext">基於類似的理由，認為愛者的語言表達的是一種個人評價，也是一種錯誤。如果他說對他而言這個女人是完美的，愛者的意思並不是說她對他來說恰好完美地滿足了他的需求。除非被愛者在某方面令人滿足，否則沒有人可能愛上她。因為她必須在他的經驗中找到一個位置；她必須在他眼中活過來，激發新的、擴展性的興趣；而除非她對他具有個人價值，否則這一切都不太可能發生。但儘管被愛者滿足了愛者，她不必完美地滿足。愛者也不期望她如此。在說對他而言她是完美的時候，他只是在重申他愛這個女人這個事實。她的完美是一個榮譽稱號，由他、且唯獨由他所賦予。愛者就像一個小孩畫了一筆塗鴉然後宣布「這是一棵樹」。那個小孩同樣可以說「這是一座穀倉」。在他告訴我們之前，那筆塗鴉什麼也不代表。一旦他告訴了我們，它就代表他所說的任何東西——只要他的態度保持一致。</span></p>
+<p class="para" id="p22" data-n="22"><button class="pnum" type="button" data-n="22" title="複製此段連結" aria-label="複製第 22 段連結">22</button><span class="ptext">由於愛首要地是賦予，而只是次要地是評價，愛從來不會像慾望或贊許那樣被對象所引發。我們慾求事物或人，是為了能滿足我們的東西。我們贊許某人，是因為他值得稱許的屬性。但這些條件與愛之間只有因果上的關聯：例如一個男人愛一個女人，是因為她美麗，或因為她滿足了他在性、家庭和社交方面的需求，或因為她與他童年對母親的記憶相似。這些事實指出了人們彼此相愛的條件；它們解釋了為什麼這個特定的男人會愛上這個特定的女人；而且如果生命科學足夠發達，這些事實可以幫助我們預測哪些人之間可能會產生愛。但解釋愛的發生並不等同於闡明愛的概念。愛的條件不等同於愛本身。在某些情境下，價值的賦予會比在其他情境下更容易發生；但無論何時發生，它都是作為一種新的價值創造而發生，並且超越了對象的所有那些可能被認為引發了它的屬性。即使一個男人只愛美麗且長得像他母親的女人，他愛她也不是因為這些屬性——至少不是在他可能因她的客觀價值而欽慕她、或因她滿足需求而慾求她的那種意義上。</span></p>
+<p class="para" id="p23" data-n="23"><button class="pnum" type="button" data-n="23" title="複製此段連結" aria-label="複製第 23 段連結">23</button><span class="ptext">那麼，一個男人究竟是為了什麼而愛一個女人？為了她是她這個人、為了她是她自己？但那等於說他愛她沒有任何理由。每個人都是他自己。擁有一個如其所是的被愛者，並不揭示愛的本質。這也無法幫助我們理解聖人渴望愛所有人的願望。所有人都是他們所是的樣子。為什麼他們應該因此而被愛？為什麼不是被憐憫或鄙視、被忽視或僅僅被利用？愛以一種無償賦予價值的能力，補充了人類對價值的追尋。對於一個成功培養了這種態度的人，任何事物都可以成為愛的對象。聖人是一個塵世需求和慾望異常謙遜的人；原則上，每一個人都能滿足這些需求。既然如此，聖人創造了一個所有人都同等適合的價值體系。這種傾向、這種自由給出的回應，不可能從他身上被引發出來：它自行賦予，而且恰好是無差別的。</span></p>
+<p class="para" id="p24" data-n="24"><button class="pnum" type="button" data-n="24" title="複製此段連結" aria-label="複製第 24 段連結">24</button><span class="ptext">對於常識之人而言，愛並不將自身限制在對象的某種先在價值之上，這是非常令人不安的。這個想法違背了我們目的導向的思維方式。如果我想喝最好的酒，我有理由偏好法國香檳勝過美國香檳。我的選擇是由法國香檳的客觀優良品質所決定的。如果我想要節省開支，我明智地選擇一種我評價較低的酒。每當我們使用目的性的手段來追求美好生活時——而這涵蓋了我們存在的大部分——我們都是這樣行事的。但愛，不同於慾望，並非完全是目的導向的。在人類生活的整體結構中，它可以充當目的性態度的潤滑劑，透過承諾新滿足的新興趣來推進目的性態度的目標；但在創造價值、自由地賦予價值時，愛在這個經濟體系中引入了一個風險的元素。目的性態度是安全的、穩妥的，就像存在銀行裡的錢；愛的態度則是投機性的，而且總是危險的。愛不是實用的，有時甚至近乎瘋狂。當我們允許愛來干擾我們目的性的習慣時，我們是把生命握在自己手中冒險。沒有愛，生命可能不值得活；但沒有目的性，就不會有生命。</span></p>
+<p class="para" id="p25" data-n="25"><button class="pnum" type="button" data-n="25" title="複製此段連結" aria-label="複製第 25 段連結">25</button><span class="ptext">因此，對愛的恐懼是人類天性中的一大事實，這也就不足為奇了。在所有男人和女人的內心，都潛伏著一種返祖式的恐懼（atavistic dread）——每當我們產生的情感超出了某物有權向我們索取的程度時，就會感到一種破產的恐慌（dread of insolvency）。每個人心中都住著一個鄉下人，在一幅抽象畫前緊張地傻笑，因為它看起來不像地球上的任何東西。人類發現發明的可能性和自發的原創性令人不安，甚至是不祥的。我們被任何新的賦予所威脅。尤其當它意味著情感的原生發動時，我們害怕承擔失敗和挫折的常見風險，害怕在一個如此容易被挫敗的正面回應中暴露自己。正如 D. H. 勞倫斯筆下的一個人物談到愛時所說：「我幾乎比害怕死亡更害怕這種觸碰。因為在它面前我更加赤裸無遮地暴露著。」甚至帕斯卡——他曾說心有理性所不知的理由——似乎也認為愛所依附的是對象內部某種秘密的、神祕的品質，只有感受力才能辨識。但帕斯卡錯了。愛是純粹的無償之物（sheer gratuity）。它從愛者身上發出，如同頭上的頭髮。它可以被激發和培養，但不能從外部推導而來。</span></p>
+<p class="para" id="p26" data-n="26"><button class="pnum" type="button" data-n="26" title="複製此段連結" aria-label="複製第 26 段連結">26</button><span class="ptext">愛就像被喚醒的天才，依據自身的創造性要求來選擇它的素材。愛不創造它的對象；它只是對對象做出創造性的回應。這就是為什麼人們幾乎無法說服一個男人，讓他相信他的被愛者配不上他。因為他的愛是一種創造性的手段，使她變得更「值得」——意即他為她注入了更大的價值，而不是使她成為一個更好的人。那也可能發生。但更重要的是，愛者改變了他自己。透過將目的性態度置於從屬地位，他將自己轉化為一個享受賦予行為的存在。這其中有某種魔法般的東西，正如我們從傳說中所知——在那些傳說裡，愛的轉化是由魔藥或魔杖所達成的。透過在自身內部培養某種傾向而使另一個人變得有價值，愛者在情感的世界中完成了某種可以與煉金術士在物質世界中所做的事相比擬的事情。</span></p>
+<p class="para" id="p27" data-n="27"><button class="pnum" type="button" data-n="27" title="複製此段連結" aria-label="複製第 27 段連結">27</button><span class="ptext">因此，愛的創造性首先是一種自我創造。愛者在自身內部創造了一種非凡的情感回應能力——一種運用自己的情緒、言語、行動來賦予價值也來評價價值的能力。每一方都透過估值本身之內的想像力遊戲（imaginative play）來增強對方的重要性。事實上，愛也許最好被理解為想像力的一個亞種。愛者不僅以詩意的隱喻說話，而且他的行為也像任何藝術家一樣。無論他有多麼「寫實主義」的抱負，沒有任何畫家能夠複製現實。外面的景色無法被轉移到畫布上。畫家只能去畫它：也就是說，透過他的藝術媒介和個人才能的技法，呈現他觀看這個景色的方式，從而賦予它在人類生活中的新的重要性。決定他的畫作之價值的是這些，而不是最初可能啟發了他的外在風景。藝術家可以隨心所欲地變換景色，正如艾爾·乙乙格雷考（El Greco）重新排列了托雷多的建築。重要的是他作為想像力之功能的觀看方式，而非石頭和灰泥在空間中的排列。同樣地，一個愛者看一個女人，不是像其他人可能會看的那樣，而是透過賦予價值的創造性能動力。他不必改變她，正如艾爾·格雷考沒有改變真正的托雷多。但他透過將她的人格納入自身正面回應的想像系統之中，而更新了她的人格。透過她，他表達了屬於愛的多樣情感。藝術家，即使是最抽象的藝術家，也不是從虛無中創造：他們再創造，重新創造。同樣地，愛者也再創造另一個人。透過在賦予價值的藝術中運用他的想像力，透過關心另一個人的獨立存在，愛者為被愛者增添了一個新的維度。在與他的關係中，在他的愛的態度之內，她成為了一種肯定性興趣的對象，甚至成為一個審美對象。她，如我們所說，被「欣賞」了——透過愛所包含的特殊媒介和技法而變得更有價值。</span></p>
+<p class="para" id="p28" data-n="28"><button class="pnum" type="button" data-n="28" title="複製此段連結" aria-label="複製第 28 段連結">28</button><span class="ptext">將愛視為想像力的一個面向，使我們得以面對我迄今所忽略的一些問題。例如，我曾說過，愛者的表現彷彿他在預測任何評價都不會發現被愛者身上有什麼重大缺陷。如果我們現在追問這些「彷彿」（as ifs）的含義，我只能提醒你它們在其他涉及想像力的情境中是如何運作的。想像你自己是劇場中的觀眾，正在觀看一齣引人入勝的戲劇。英雄死了，你開始流淚。那麼你在為誰哭泣？當然不是為了那位演員：你知道一旦幕布落下，他就會爬起身來準備接受盛大的喝彩。那麼是為了劇中的角色嗎？但根本沒有這樣一個人。你完全清楚哈姆雷特（至少是莎士比亞的哈姆雷特）從未存在過。他的死亡是純粹虛構的，怎麼可能讓你悲傷？然而它確實讓你悲傷了，也許比你曾認識的真實之人的死亡更令你悲傷。我認為發生的情況是：你的回應彷彿那個演員真的是哈姆雷特，而且彷彿哈姆雷特真的存在。這個「彷彿」意味著：儘管你知道演員只是在演戲，哈姆雷特只是虛構的，但你的想像力投入使你表達出了適用於真實之人的情感。在任何時刻你都沒有被欺騙。劇場的「幻象」根本不是幻象。它是一種想像力的行為——完全不像判斷上的錯誤，完全不像促使堂吉訶德砸碎殘忍的木偶戲以拯救不幸女主角的那種錯亂。在走進劇場時，你進入了戲劇情境。你讓自己的想像力投入到一個特定的管道之中。藉由寫實道具的輔助、周圍的黑暗、以及其他正在做同樣想像的人們的陪伴，你賦予了演員和他們所代表的角色以一種影響你的感受的能力——如同真實的人可能做到的那樣。</span></p>
+<p class="para" id="p29" data-n="29"><button class="pnum" type="button" data-n="29" title="複製此段連結" aria-label="複製第 29 段連結">29</button><span class="ptext">在愛中，同樣的事情發生了。愛的「彷彿」是想像性的，而非本質上是妄想性的。當然，愛者可能對他的被愛者產生錯覺。那是關於愛者的老笑話：他們活在持續的幻覺中，丘比特被情感蒙蔽了雙眼，等等。這種事經常發生，我不打算否認。但若說這應該是愛的本質，若說愛就其本性而言必然是幻覺性的，在我看來是完全荒謬的。即使人們經常爬上舞台、表現得像堂吉訶德一樣，我們也不會說他們的行為揭示了作為劇場觀眾意味著什麼。我們會說他們不知道如何看一齣戲。同樣地，人們並不是在演出幻覺中成為愛者的。儘管愛者確實會犯判斷上的錯誤，有時也會被自己的感受所裹挾，但愛本身不是幻覺性的。情感上的偏差對愛而言是偶然附帶的（adventitious），而非具有定義性的。正如愛首要地不是一種認知方式，它也不是一種犯錯的方式。評價是一種認知方式，情感確實可能干擾評價的正當運用。但愛是一種想像性的手段，用以賦予若非如此就不會存在的價值。在一個人作為愛者——而非作為一個尋求知識的人或屈從於自我欺騙的人（他也可能是後兩者）——的程度上，他給予被愛者以禮遇：無論他對她知道什麼，都肯定地對待她。在拒絕讓他的評價性知識使他的愛的行為偏離方向時，他賦予了一種只能被理解為想像力行為的敬意。正如盧梭筆下的一個角色所說：「愛並沒有使我對你的缺點視而不見，但它使那些缺點變得對我珍貴。」正是這種估值性的姿態，使想像力得以用於整體意義上的禮遇。一個有禮貌的人——過去被稱為「紳士」的人——可能對所有女性都同樣表示尊重，不論她們的社會地位如何。他這樣做，是作為對女性整體的愛的饋贈——最壞的和最好的，最低的和最高的。他通常不會對社會中的差異或人與人之間的差異產生錯覺。他並不認為女人都是一樣的。然而，藉由他的想像性回應，他的行為彷彿她們身上存在著一種普遍的卓越，不管她們實際上值得什麼。</span></p>
+<p class="para" id="p30" data-n="30"><button class="pnum" type="button" data-n="30" title="複製此段連結" aria-label="複製第 30 段連結">30</button><span class="ptext">劇場的類比還在另一個方面闡明了愛者的想像力。我指的是「在場」（presence）的現象。觀眾對虛構角色的回應，彷彿它是一個真實的人。他之所以能夠這樣做，部分原因在於這個角色是由一個真實的人向他呈現的。說話、大笑、呼喊——演員使一個人類存在的真實性在觀眾面前「在場」了。他周圍環境的人工性——他身處一齣「戲」中、一個虛構中，他被安置在一個舞台上以便每個人都能看見和聽見，他在一座特定建築中、在一個特定時間進行表演——所有這些反而凸顯了一個事實：演員本人不是人工的，而是活生生的。觀眾透過將演員視為被框定在劇場的審美裝置之中的一個在場的真實存在，來完成他的想像力的飛躍。演員的「舞台存在感」（stage presence）越強，他就越能促進觀眾的這一壯舉。但歸根結底，這個現象取決於觀眾自身——取決於他的戲劇感受力，他將虛構角色灌注以就在他面前的那個活生生的人的真實性的創造能力。正如莎士比亞《亨利五世》的序幕對觀眾所說：「讓我們，這偉大帳目中的零，／作用於你們想像的力量之上。／……因為現在必須由你們的思想來裝扮我們的國王。」</span></p>
+<p class="para" id="p31" data-n="31"><button class="pnum" type="button" data-n="31" title="複製此段連結" aria-label="複製第 31 段連結">31</button><span class="ptext">以類似的方式，愛者的注意力凝定在被愛者純粹的在場之上。在那種有時被稱為「墜入愛河」的極端狀態中，這種專注常常接近於自我催眠。佛洛伊德是最早認識到催眠與某些類型的愛之間的親緣關係的人之一；但他的分析忽略了這些現象的哲學意涵，即它們與估值的關聯。對我而言，一個人在視覺上黏附於另一個人的那種愛的凝視，意味著一種非凡的價值賦予，一種對另一個人的在場的想像性（儘管可能過度的）回應。愛者的目光照亮了被愛者。他將她作為一個他所關注的活生生的現實來慶祝。如同任何形式的慶祝一樣，他的回應貢獻了某種新的、富有表現力的東西。他將這個女人引入他自己的想像世界——彷彿透過某種魔法，她確實是他的藝術作品，而只有他才能凝視她的無盡細節。只要那些特徵強化了她的在場感，愛者就會珍惜被愛者身上甚至被評價所鄙棄的特徵。這位女士臉上有瑕疵嗎？對她的愛者而言，它可能比她嬰兒藍的眼睛更令人著迷：它使她在他的記憶中更加鮮明地突出。她有一張尖刻的嘴和暴躁的脾氣嗎？她的愛者可能會開始品味這些特質——不是一般性地，而是在這個特定的女人身上。它們使她的形象變得生動而引人注目。甚至奧黛特（Odette）那些可笑的庸俗之處對斯萬（Swann）而言都是惹人憐愛的。它們以無可置疑的清晰度向他展示了她是什麼；而儘管他厭惡庸俗——正如普魯斯特本人厭惡日常世界——他顯然享受這個機會，透過想像性地賦予不應得的價值來補償他的厭惡。</span></p>
+<p class="para" id="p32" data-n="32"><button class="pnum" type="button" data-n="32" title="複製此段連結" aria-label="複製第 32 段連結">32</button><span class="ptext">談到適合文學的題材，福樓拜曾說：「伊夫托（法國北部的一個省城）和君士坦丁堡一樣好。」同樣地，人們可以說，被愛者身上所有使她與眾不同的東西，甚至她的平凡無奇之處，都可以對愛者的藝術有所貢獻。因為那種藝術在於：如其所是地接受一個女人，向她的在場所帶來的衝擊敞開自己，同時援引審美的範疇賦予她以新的意義。僅僅藉由他肯定性的回應，愛者就將一塊普通的石頭安置在最昂貴的鑲嵌之中。愛的想像力賦予一個人以價值，正如戲劇的想像力賦予一個演員以劇場的重要性。如果——正如有時發生的那樣——被愛者被放上了基座，這可以類比為演員被放上了舞台：不必然是為了崇拜的目的，而是為了以最富想像力的方式，專注於她的在場所具有的暗示性的真實。愛者知道這個女人在客觀上不是完美的，正如觀眾知道演員不是哈姆雷特；但在如其所是地關注她的同時，他以想像力將她視為（對他而言）無與倫比的維納斯的呈現。</span></p>
+<p class="para" id="p33" data-n="33"><button class="pnum" type="button" data-n="33" title="複製此段連結" aria-label="複製第 33 段連結">33</button><span class="ptext">我確信愛與劇場之間的相似性可以被推展得更遠。愛是享受另一個人的藝術，正如劇場是享受戲劇情境的藝術。因為愛不可避免地暗示了享受的可能性，它是所有基於人際關係的娛樂中最常見的主題：它是唯一令每個人都感興趣的題材。然而，愛與劇場之間的類比也可能產生誤導。演員扮演一個角色；被愛者不扮演任何東西，儘管她可能象徵許多。被愛者不是完美的形象——不是在演員作為哈姆雷特的形象或再現的那種意義上。愛者運用他的想像力來欣賞被愛者如其所是的樣子，接受她本身；但觀眾利用演員作為虛構的載體。這就是為什麼一個演員很少能直視他的觀眾的眼睛。在如此直接的交流中，他的在場壓過了他的審美功能，而我們會對他作為他碰巧所是的那個人做出回應，而不是對他所代表的角色做出回應。另一方面，愛者們很可能被定格（正如他們經常被拍攝或描繪的那樣）在一種即時對峙的共同姿態中，面對面，每一個人都在搜尋對方的人格，每一個人都凝望著對方的眼睛：「我們的目光纏繞，穿引著／我們的雙眼，如在一根雙股線上。」</span></p>
+<p class="para" id="p34" data-n="34"><button class="pnum" type="button" data-n="34" title="複製此段連結" aria-label="複製第 34 段連結">34</button><span class="ptext">愛與劇場之間的這個根本差異，也許有助於解釋演員經常感受到的一些情感上的困難。和所有人一樣，演員想要因為他自身而被愛；但他的觀眾只透過他所扮演的角色來認識他。他感覺到觀眾所「愛」的其實是那些角色，或者充其量是他的角色詮釋，當然不會超過他自身中用以使角色在場的那一部分。作為演員而取得成功後，他甚至可能認同他最擅長扮演的角色類型。那可能給了他表達自身人格的許多機會，但他所活在其中的角色常常會遮蔽他最深處的傾向，使得任何人都難以對他作為一個人做出回應。基於類似的理由——我以後會回到這個問題——我無法理解柏拉圖在說愛者在被愛者身上看見絕對美的「形象」或「再現」時，如何能是在談論對人的愛。柏拉圖用這個觀念來論證，所有愛者實際上都是在愛那個絕對者。我們難道不能也說，他心目中的那些愛者根本就沒有能力去愛另一個人嗎？</span></p>
+<p class="para" id="p35" data-n="35"><button class="pnum" type="button" data-n="35" title="複製此段連結" aria-label="複製第 35 段連結">35</button><span class="ptext">在愛中，如同在劇場中一樣，想像力在一種特定的心態或傾向（set or disposition）中展現自身。一個恰好聽到排練的木匠，當然知道舞台上的人在扮演哈姆雷特。但他並不彷彿那人真是哈姆雷特般回應。專注於自己的工作，木匠不是觀眾：他沒有將自己置入一個戲劇性的管道之中。同樣地，一個以科學的超然態度觀察某人的實驗者，也不會肯定被觀察者的存在。他投身於實驗，而非投身於被觀察的個人。他可能如其所是地接受受試者，但僅僅是在對自己的數據保持不偏不倚的意義上。透過保持超然，科學家拒絕進入愛所要求的那種關係。透過愛，一個人將自身依附於另一個人，而且是以揭示他自己的人格以及對方的人格的方式。被愛者的真實性散發著一種重要感的光芒，這種光芒從愛者身上發出，並在愛是互惠的時候動態地增強。還是說「光芒」這個詞太強烈了？愛並不總是狂喜的；甚至它的詩意也常常是平淡的。有安靜的、舒適的、平淡日常的愛，也有那些似乎伴隨著缺乏經驗而來的狂想式的愛。愛有無限的變調、所有可能的強度層次，以及無盡多樣的想像性表達方式。</span></p>
+<p class="para" id="p36" data-n="36"><button class="pnum" type="button" data-n="36" title="複製此段連結" aria-label="複製第 36 段連結">36</button><span class="ptext">甚至一個人對另一個人產生性吸引力，也是透過愛的想像力。單憑我們的本能，不足以使我們像人類那樣去愛，甚至不足以使我們像人類那樣去渴求。至少那些明顯的本能——例如生殖器興奮的機制——是不夠的。也許價值的賦予本身就是本能性的。它不需要被習得，而且它似乎在人類中是普遍的。每個人都感受到對某種愛的關係的需求。所有人都渴望一個由自己所創造的共同體，不同於他們出生時所屬的那一個。這就是為什麼愛總是對現狀的威脅，有時甚至具有顛覆性。愛者們創造了他們自己的情感宇宙。當愛的想像力來回彈射——每個人都將自己既視為愛者也視為被愛者——一種新的整體由此產生，一種互動的合一。人類這個物種可以在沒有劇場藝術、繪畫藝術、文學藝術或音樂藝術的情況下存續；但如果沒有相互之愛的藝術，人就不成其為人。在這個意義上，愛的想像力，比任何其他想像力都更能向我們展示我們是什麼，以及在理想上我們可能成為什麼。</span></p>
+<p class="para" id="p37" data-n="37"><button class="pnum" type="button" data-n="37" title="複製此段連結" aria-label="複製第 37 段連結">37</button><span class="ptext">在本書的其餘部分，我將研究賦予和評價這兩個概念是如何進入哲學史的。我將運用它們來闡明愛的本質——既作為一種心理態度，也作為一種道德理想，但最重要的是，作為人類想像力的一件造物（artifact）。</span></p>
+  </div>
+</main>
+<div id="hint" class="honly">← 由右至左閱讀，左右滑動翻頁 →</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<button id="copySel" class="copysel" type="button">⧉ 複製所選文字</button>
+
+<script>
+(function(){
+  var MAXN = 37;
+  var body = document.body, root = document.documentElement;
+  var reader = document.getElementById('reader');
+  var content = document.querySelector('.content');
+  var progress = document.getElementById('progress');
+  var THEMES = ['light','sepia','dark'];
+  var THEME_LBL = {light:'明亮', sepia:'米黃', dark:'夜間'};
+  var THEME_ICON = {light:'☀', sepia:'◐', dark:'☾'};
+
+  function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+
+  // ---- theme ----
+  var themeBtn = document.getElementById('themeBtn');
+  var themeIcon = document.getElementById('themeIcon');
+  function applyTheme(t){
+    THEMES.forEach(function(x){ body.classList.remove('theme-'+x); });
+    body.classList.add('theme-'+t);
+    themeIcon.textContent = THEME_ICON[t];
+    themeBtn.setAttribute('aria-label', '主題：' + THEME_LBL[t] + '（點按切換）');
+    save('nol_theme', t);
+  }
+  var theme = load('nol_theme','light');
+  if(THEMES.indexOf(theme)<0) theme='light';
+  applyTheme(theme);
+  themeBtn.addEventListener('click', function(){
+    theme = THEMES[(THEMES.indexOf(theme)+1)%THEMES.length];
+    applyTheme(theme);
+    showToast(THEME_LBL[theme] + '模式');
+  });
+
+  // ---- font size ----
+  var fs = parseFloat(load('nol_fs','19'));
+  if(isNaN(fs)) fs=19;
+  function applyFs(){ fs=Math.max(15,Math.min(30,fs)); root.style.setProperty('--fs', fs+'px'); save('nol_fs',String(fs)); }
+  applyFs();
+  document.getElementById('fsUp').addEventListener('click', function(){ fs+=1.5; applyFs(); updateProgress(); });
+  document.getElementById('fsDown').addEventListener('click', function(){ fs-=1.5; applyFs(); updateProgress(); });
+
+  // ---- layout ----
+  function applyLayout(vertical){
+    body.classList.toggle('vertical', vertical);
+    save('nol_vertical', vertical?'1':'0');
+    // reset relevant scrolls so progress reads correctly
+    requestAnimationFrame(updateProgress);
+  }
+  var vertical = load('nol_vertical','1')==='1';
+  applyLayout(vertical);
+  document.querySelectorAll('#layoutToggle .seg').forEach(function(seg){
+    seg.addEventListener('click', function(){
+      var wantVertical = seg.getAttribute('data-layout')==='v';
+      if(wantVertical === body.classList.contains('vertical')) return; // already there
+      var target = currentParagraph();
+      applyLayout(wantVertical);
+      if(target) requestAnimationFrame(function(){ scrollToPara(target,false); });
+    });
+  });
+
+  // ---- progress ----
+  function updateProgress(){
+    var frac=0;
+    if(body.classList.contains('vertical')){
+      var max = content.scrollWidth - content.clientWidth;
+      // vertical-rl scrolls right-to-left: scrollLeft is <=0 (or 0..-max) per engine.
+      var sl = content.scrollLeft;
+      var traveled = Math.abs(sl);
+      frac = max>0 ? traveled/max : 0;
+    } else {
+      var dmax = (document.documentElement.scrollHeight - window.innerHeight);
+      frac = dmax>0 ? window.scrollY/dmax : 0;
+    }
+    frac = Math.max(0,Math.min(1,frac));
+    progress.style.width = (frac*100).toFixed(2)+'%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  content.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+
+  // ---- find current paragraph (for keeping place on layout switch) ----
+  function currentParagraph(){
+    var ps = document.querySelectorAll('.para');
+    var vw = window.innerWidth, vh = window.innerHeight;
+    for(var i=0;i<ps.length;i++){
+      var r = ps[i].getBoundingClientRect();
+      if(body.classList.contains('vertical')){
+        if(r.right >= 0 && r.left <= vw) return ps[i];
+      } else {
+        if(r.bottom >= 0 && r.top <= vh) return ps[i];
+      }
+    }
+    return ps[0];
+  }
+
+  // ---- jump / scroll-to ----
+  function scrollToPara(el, smooth){
+    if(!el) return;
+    el.scrollIntoView({behavior: smooth?'smooth':'auto', block:'center', inline:'center'});
+    requestAnimationFrame(updateProgress);
+  }
+  function flash(el){
+    if(!el) return;
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    setTimeout(function(){ el.classList.remove('flash'); }, 1400);
+  }
+  function jumpTo(n){
+    n = parseInt(n,10);
+    if(isNaN(n) || n<1 || n>MAXN) return;
+    var el = document.getElementById('p'+n);
+    if(el){
+      if(history.replaceState) history.replaceState(null,'','#p'+n); else location.hash='p'+n;
+      scrollToPara(el,true); flash(el);
+    }
+  }
+  document.getElementById('jumpBtn').addEventListener('click', function(){ jumpTo(document.getElementById('jumpInput').value); });
+  document.getElementById('jumpInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){ jumpTo(this.value); } });
+
+  // ---- copy link to a paragraph ----
+  var toast = document.getElementById('toast'), toastTimer=null;
+  function showToast(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+  }
+  function linkFor(n){ return location.href.split('#')[0] + '#p' + n; }
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function(resolve,reject){
+      try{
+        var ta=document.createElement('textarea');
+        ta.value=text; ta.setAttribute('readonly','');
+        ta.style.position='fixed'; ta.style.top='-1000px';
+        document.body.appendChild(ta); ta.select();
+        var ok=document.execCommand('copy'); document.body.removeChild(ta);
+        ok?resolve():reject();
+      }catch(e){ reject(e); }
+    });
+  }
+  document.querySelectorAll('.pnum').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      var n = btn.getAttribute('data-n');
+      var url = linkFor(n);
+      if(history.replaceState) history.replaceState(null,'','#p'+n);
+      copyText(url).then(function(){
+        showToast('已複製第 ' + n + ' 段連結');
+      }).catch(function(){
+        showToast('連結：' + url);
+      });
+      var el=document.getElementById('p'+n); if(el) flash(el);
+    });
+  });
+
+  // ---- copy selected passage text (coexists with per-paragraph link copy) ----
+  var copySelBtn = document.getElementById('copySel');
+  var selTimer=null, lastSel='';
+  function selectionInReader(){
+    var sel = window.getSelection ? window.getSelection() : null;
+    if(!sel || sel.isCollapsed || !sel.rangeCount) return '';
+    var node = sel.anchorNode;
+    if(node && reader.contains(node)) return sel.toString().replace(/\s+$/,'').replace(/^\s+/,'');
+    return '';
+  }
+  function refreshCopySel(){
+    lastSel = selectionInReader();
+    copySelBtn.classList.toggle('show', lastSel.length>0);
+  }
+  document.addEventListener('selectionchange', function(){
+    clearTimeout(selTimer); selTimer=setTimeout(refreshCopySel, 120);
+  });
+  // keep the selection alive when the pill is pressed
+  copySelBtn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+  copySelBtn.addEventListener('click', function(){
+    var t = lastSel || selectionInReader();
+    if(!t){ copySelBtn.classList.remove('show'); return; }
+    copyText(t).then(function(){ showToast('已複製所選文字'); })
+               .catch(function(){ showToast('複製失敗，請長按選取後使用系統選單'); });
+    copySelBtn.classList.remove('show');
+    var sel = window.getSelection && window.getSelection();
+    if(sel && sel.removeAllRanges) sel.removeAllRanges();
+  });
+
+  // ---- deep link on load ----
+  function gotoHash(smooth){
+    var m = /^#p(\d+)$/.exec(location.hash||'');
+    if(m){
+      var el = document.getElementById('p'+m[1]);
+      if(el){ scrollToPara(el,smooth); flash(el); return true; }
+    }
+    return false;
+  }
+  window.addEventListener('hashchange', function(){ gotoHash(true); });
+
+  // initial paint
+  requestAnimationFrame(function(){
+    if(!gotoHash(false)) updateProgress();
+  });
+})();
+</script>
+</body>
+</html>
